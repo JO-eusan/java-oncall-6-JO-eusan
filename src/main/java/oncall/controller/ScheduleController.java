@@ -5,6 +5,7 @@ import static oncall.constant.Value.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import oncall.model.CalendarManager;
 import oncall.model.Holiday;
@@ -18,10 +19,14 @@ public class ScheduleController {
 	CalendarManager calendarManager;
 	Sequence weekdaySequence;
 	Sequence weekendSequence;
+	Stack<String> result;
 
 	public ScheduleController() {
 		this.inputView = new InputView();
 		this.outputView = new OutputView();
+
+		result = new Stack<>();
+		result.push(" ");
 	}
 
 	public void scheduling() {
@@ -71,21 +76,38 @@ public class ScheduleController {
 	}
 
 	private void startAssignment() {
-		for(int i=1; i<calendarManager.getEndDay(); i++) {
+		for(int i=1; i<=calendarManager.getEndDay(); i++) {
 			outputView.printDay(calendarManager.getMonth(), i, calendarManager.getDayOfWeek());
-			printName(calendarManager.isWeekend(), Holiday.isHoliday(calendarManager.getMonth(), i));
+			assignment(calendarManager.isWeekend(), Holiday.isHoliday(calendarManager.getMonth(), i));
+			outputView.printName(result.get(i));
 
 			calendarManager.setNextDayOfWeek();
 		}
 	}
 
-	private void printName(boolean isWeekend, boolean isHoliday) {
+	private void assignment(boolean isWeekend, boolean isHoliday) {
 		if(isWeekend || isHoliday) {
-			outputView.printName(weekendSequence.getNextPerson());
+			if(result.peek().equals(weekendSequence.getNextPerson())) {
+				String tmp = weekendSequence.getNextPerson();
+				weekendSequence.setNextPerson();
+				result.push(weekendSequence.getNextPerson());
+				result.push(tmp);
+				weekendSequence.setNextPerson();
+				return;
+			}
+			result.push(weekendSequence.getNextPerson());
 			weekendSequence.setNextPerson();
 			return;
 		}
-		outputView.printName(weekdaySequence.getNextPerson());
+		if(result.peek().equals(weekdaySequence.getNextPerson())) {
+			String tmp = weekdaySequence.getNextPerson();
+			weekdaySequence.setNextPerson();
+			result.push(weekdaySequence.getNextPerson());
+			result.push(tmp);
+			weekdaySequence.setNextPerson();
+			return;
+		}
+		result.push(weekdaySequence.getNextPerson());
 		weekdaySequence.setNextPerson();
 	}
 }

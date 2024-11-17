@@ -35,7 +35,6 @@ public class Sequence {
 				break;
 			}
 		}
-
 	}
 
 	private String[] validateFormat(String input) {
