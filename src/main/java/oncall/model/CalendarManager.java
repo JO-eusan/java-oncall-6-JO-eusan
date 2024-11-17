@@ -5,12 +5,37 @@ import static oncall.constant.Value.*;
 
 public class CalendarManager {
 	private int month;
-	private String startDay;
+	private String dayOfWeek;
+	private int endDay;
 
 	public CalendarManager(String input) {
 		String[] tokens = validateFormat(input);
 		this.month = validateMonth(tokens[0]);
-		this.startDay = validateDay(tokens[1]);
+		this.dayOfWeek = validateDay(tokens[1]);
+		this.endDay = Month.getMaxDay(this.month);
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public String getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+	public int getEndDay() {
+		return endDay;
+	}
+
+	public void setNextDayOfWeek() {
+		this.dayOfWeek = DayOfWeek.getNextDayOfWeek(dayOfWeek);
+	}
+
+	public boolean isWeekend() {
+		if(dayOfWeek.equals(SATURDAY) || dayOfWeek.equals(SUNDAY)) {
+			return true;
+		}
+		return false;
 	}
 
 	private String[] validateFormat(String input) {

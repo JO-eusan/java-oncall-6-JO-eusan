@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class Sequence {
 	private List<String> sequence;
+	private String nextPerson;
 
 	public Sequence(String names) {
 		String[] tokens = validateFormat(names);
@@ -16,10 +17,25 @@ public class Sequence {
 		validateDuplicate(namesLengthInFive);
 
 		this.sequence = namesLengthInFive;
+		this.nextPerson = namesLengthInFive.get(0);
 	}
 
 	public List<String> getSequence() {
 		return sequence;
+	}
+
+	public String getNextPerson() {
+		return nextPerson;
+	}
+
+	public void setNextPerson() {
+		for(int i=0; i<sequence.size(); i++) {
+			if(sequence.get(i).equals(nextPerson)) {
+				this.nextPerson =  sequence.get((i+1) % sequence.size());
+				break;
+			}
+		}
+
 	}
 
 	private String[] validateFormat(String input) {
