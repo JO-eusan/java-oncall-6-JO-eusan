@@ -4,10 +4,9 @@ import static oncall.constant.ErrorMessage.*;
 import static oncall.constant.Value.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import oncall.model.Calendar;
+import oncall.model.CalendarManager;
 import oncall.model.Sequence;
 import oncall.view.InputView;
 import oncall.view.OutputView;
@@ -15,7 +14,7 @@ import oncall.view.OutputView;
 public class ScheduleController {
 	InputView inputView;
 	OutputView outputView;
-	Calendar calendar;
+	CalendarManager calendarManager;
 	Sequence weekdaySequence;
 	Sequence weekendSequence;
 
@@ -32,7 +31,7 @@ public class ScheduleController {
 	private void setCalender() {
 		String monthAndDay = inputView.readMonthAndDay();
 		try {
-			this.calendar = new Calendar(monthAndDay);
+			this.calendarManager = new CalendarManager(monthAndDay);
 		} catch (IllegalArgumentException e) {
 			outputView.printArgumentErrorMessage(e);
 			setCalender();
@@ -54,17 +53,17 @@ public class ScheduleController {
 
 	private void checkPersonnel(Sequence weekdaySequence, Sequence weekendSequence) {
 		Set<String> names = new HashSet<>();
-		for(String name : weekdaySequence.getSequence()) {
+		for (String name : weekdaySequence.getSequence()) {
 			names.add(name);
 		}
-		for(String name : weekendSequence.getSequence()) {
+		for (String name : weekendSequence.getSequence()) {
 			names.add(name);
 		}
 
 		if (names.size() < MINIMUM_PEOPLE) {
 			throw new IllegalArgumentException(INPUT_FORMAT_ERROR_MESSAGE);
 		}
-		if(names.size() > MAXIMUM_PEOPLE) {
+		if (names.size() > MAXIMUM_PEOPLE) {
 			throw new IllegalArgumentException(INPUT_FORMAT_ERROR_MESSAGE);
 		}
 	}

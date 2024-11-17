@@ -3,11 +3,11 @@ package oncall.model;
 import static oncall.constant.ErrorMessage.*;
 import static oncall.constant.Value.*;
 
-public class Calendar {
+public class CalendarManager {
 	private int month;
 	private String startDay;
 
-	public Calendar(String input) {
+	public CalendarManager(String input) {
 		String[] tokens = validateFormat(input);
 		this.month = validateMonth(tokens[0]);
 		this.startDay = validateDay(tokens[1]);
