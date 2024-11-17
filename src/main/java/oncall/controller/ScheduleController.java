@@ -4,6 +4,8 @@ import static oncall.constant.ErrorMessage.*;
 import static oncall.constant.Value.*;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import oncall.model.Calendar;
 import oncall.model.Sequence;
@@ -15,6 +17,7 @@ public class ScheduleController {
 	OutputView outputView;
 	Calendar calendar;
 	Sequence weekdaySequence;
+	Sequence weekendSequence;
 
 	public ScheduleController() {
 		this.inputView = new InputView();
@@ -38,17 +41,26 @@ public class ScheduleController {
 
 	private void setSequence() {
 		String weekdaySequence = inputView.readWeekdaySequence();
+		String weekendSequence = inputView.readWeekendSequence();
 		try {
 			this.weekdaySequence = new Sequence(weekdaySequence);
-			System.out.println(this.weekdaySequence);
-			/* 휴일 추가*/
+			this.weekendSequence = new Sequence(weekendSequence);
+			checkPersonnel(this.weekdaySequence, this.weekendSequence);
 		} catch (IllegalArgumentException e) {
 			outputView.printArgumentErrorMessage(e);
 			setSequence();
 		}
 	}
 
-	private void checkPersonnel(HashSet<String> names) {
+	private void checkPersonnel(Sequence weekdaySequence, Sequence weekendSequence) {
+		Set<String> names = new HashSet<>();
+		for(String name : weekdaySequence.getSequence()) {
+			names.add(name);
+		}
+		for(String name : weekendSequence.getSequence()) {
+			names.add(name);
+		}
+
 		if (names.size() < MINIMUM_PEOPLE) {
 			throw new IllegalArgumentException(INPUT_FORMAT_ERROR_MESSAGE);
 		}

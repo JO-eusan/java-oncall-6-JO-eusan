@@ -18,6 +18,10 @@ public class Sequence {
 		this.sequence = namesLengthInFive;
 	}
 
+	public List<String> getSequence() {
+		return sequence;
+	}
+
 	private String[] validateFormat(String input) {
 		String[] splitInput = input.split(",");
 
